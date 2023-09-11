@@ -1,5 +1,17 @@
 # SFDX Org Development Model Github Action - Build & Deploy
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Getting Started](#getting-started)
+- [Usage Sample](#usage-sample)
+  - [Inputs:](#inputs)
+  - [Note for destructives changes.](#note-for-destructives-changes)
+- [Contributing to the Repository](#contributing-to-the-repository)
+- [Reporting Issues](#reporting-issues)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 This repository implements a Github Action that's is a variation of the [Bitbucket Pipelines examples with org development](https://github.com/forcedotcom/sfdx-bitbucket-org/).
 
 This action is usefull to deploy to non-scratch orgs (sandbox or production) with [Github Workflow](https://guides.github.com/introduction/flow/).
@@ -11,6 +23,9 @@ It's a Javascript [Github Action](https://github.com/features/actions), that wil
 - Deploy/Check one or more deploy package
 - Deploy/Check destructive changes (optional)
 - Execute Data Factory Apex
+
+> [!WARNING]
+> This repository was cloned and updated from https://github.com/tiagonnascimento/sfdx-orgdev-build-deploy as this repository was not updated for two years, at the time of this writing. Some URLs, configuration and dependencies are deprecated or do not exist anymore.
 
 ## Getting Started
 
@@ -65,6 +80,7 @@ jobs:
 ```
 
 ### Inputs:
+
 | Name                  | Requirement | Description |
 | --------------------- | ----------- | ----------- |
 | `type`                | _required_  | Whether to deploy on `production` or on `sandbox` (default value) |
@@ -83,7 +99,7 @@ jobs:
 | `default_source_path` | _optional_  | Path on the repo where your source files are stored, for SFDX project this is normally `force-app/main/default`
 
 
-# Note for destructives changes.
+### Note for destructives changes.
 
 The `destructive_path` input is a path folder, with two files inside. For example if we have the following folder structure
 
@@ -102,7 +118,7 @@ The `destructive_path` input is a path folder, with two files inside. For exampl
   |-- .gitignore
   ...
   |-- sfdx-project.json 
-```  
+```
 
 The `destructive_path` will be `releases/01_releases/destructive`.
 
@@ -110,6 +126,44 @@ The `destructive_path` will be `releases/01_releases/destructive`.
 ## Contributing to the Repository
 
 If you find any issues or opportunities for improving this repository, fix them! Feel free to contribute to this project by [forking](http://help.github.com/fork-a-repo/) this repository and making changes to the content. Once you've made your changes, share them back with the community by sending a pull request. See [How to send pull requests](http://help.github.com/send-pull-requests/) for more information about contributing to GitHub projects.
+
+Update to the Github action code should be compiled and the distribution artifact (`dist/index.js`) should be added to the repository (according to the [Documentation of Github](https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action#commit-tag-and-push-your-action-to-github))
+
+To do so, follow the following steps:
+
+1. Install `vercel/ncc by` running this command in your terminal.
+
+```bash
+npm i -g @vercel/ncc
+```
+
+2. Install dependencies
+
+  ```bash
+  npm ci
+  ```
+
+3. Compile your `index.js` file, after entering the `src` directory
+
+  ```bash
+  cd src
+  ncc build index.js --license licenses.txt --out ../dist
+  ```
+
+  You'll see a new `dist/index.js` file, at the root of the repository folder, with your code and the compiled modules. You will also see an accompanying `dist/licenses.txt` file containing all the licenses of the `node_modules` you are using.
+
+  Change the `main` keyword in your `action.yml` file to use the new `dist/index.js` file.
+
+  ```yml
+  main: 'dist/index.js'
+  ```
+
+3. Commit `dist/index.js` alongside your updated files.
+
+   ```bash
+   git add dist/index.js action.yml ...
+   git commit -m "..."
+   ```
 
 ## Reporting Issues
 

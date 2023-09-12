@@ -13221,10 +13221,7 @@ const execCommand = __nccwpck_require__(7236);
 
 var fnInstallSFDX = function(){
     core.info('=== Downloading and installing SFDX cli ===');
-    execCommand.run('wget', ['https://developer.salesforce.com/media/salesforce-cli/sf/channels/stable/sf-linux-x64.tar.xz']);
-    execCommand.run('mkdir', ['-p', 'sfdx-cli']);
-    execCommand.run('tar', ['xJf', 'sf-linux-x64.tar.xz', '-C', 'sfdx-cli', '--strip-components', '1']);
-    execCommand.run('export', ['export PATH=~/sfdx-cli/bin:$PATH']);
+    execCommand.run('npm', ['install', 'sfdx-cli', '--global']);
     core.info('=== SFDX cli installed ===');
 };
 
